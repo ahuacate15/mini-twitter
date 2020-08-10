@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SignUpActivity">
+
+    <ImageView
+        android:id="@+id/imgSingUp"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_logo_minitwitter_blue"
+        app:layout_constraintBottom_toTopOf="@+id/txtUsernameSingUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/txtUsernameSingUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="Usuario"
+        android:inputType="textPersonName"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHighlight="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/txtEmailSingUp"
+        app:layout_constraintEnd_toEndOf="@+id/imgSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/imgSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/imgSingUp" />
+
+    <EditText
+        android:id="@+id/txtEmailSingUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Correo"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/txtPasswordSingUp"
+        app:layout_constraintEnd_toEndOf="@+id/txtUsernameSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/txtUsernameSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsernameSingUp" />
+
+    <EditText
+        android:id="@+id/txtPasswordSingUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/txtPasswordConfirmationSingUp"
+        app:layout_constraintEnd_toEndOf="@+id/txtEmailSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/txtEmailSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailSingUp" />
+
+    <EditText
+        android:id="@+id/txtPasswordConfirmationSingUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Confirme contraseña"
+        android:inputType="textPassword"
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/btnSingUp"
+        app:layout_constraintEnd_toEndOf="@+id/txtPasswordSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/txtPasswordSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/txtPasswordSingUp" />
+
+    <Button
+        android:id="@+id/btnSingUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorBlue"
+        android:text="registrarme"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toTopOf="@+id/btnBackToLogin"
+        app:layout_constraintEnd_toEndOf="@+id/txtPasswordConfirmationSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/txtPasswordConfirmationSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/txtPasswordConfirmationSingUp" />
+
+    <Button
+        android:id="@+id/btnBackToLogin"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/background_light"
+        android:text="Ya tengo una cuenta"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnSingUp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/btnSingUp"
+        app:layout_constraintTop_toBottomOf="@+id/btnSingUp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
