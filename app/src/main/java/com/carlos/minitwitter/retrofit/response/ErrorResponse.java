@@ -1,15 +1,15 @@
-package com.carlos.minitwitter.request;
+package com.carlos.minitwitter.retrofit.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GenericResponse {
+public class ErrorResponse {
 
     @Expose
     @SerializedName("message")
     private String message;
 
-    public GenericResponse() {
+    public ErrorResponse() {
     }
 
     public String getMessage() {

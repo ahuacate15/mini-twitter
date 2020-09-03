@@ -1,19 +1,21 @@
-package com.carlos.minitwitter.request;
+package com.carlos.minitwitter.retrofit.request;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginRequest {
 
-    @Expose
     @SerializedName("key")
+    @Expose
     private String key;
 
-    @Expose
     @SerializedName("password")
+    @Expose
     private String password;
 
-    public LoginRequest() {
+    public LoginRequest(String key, String password) {
+        this.key = key;
+        this.password = password;
     }
 
     public String getKey() {
