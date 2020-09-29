@@ -10,7 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.carlos.minitwitter.R;
+import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
+import com.carlos.minitwitter.common.SharedPreferencesManager;
 import com.carlos.minitwitter.retrofit.MiniTwitterClient;
 import com.carlos.minitwitter.retrofit.MiniTwitterService;
 import com.carlos.minitwitter.retrofit.request.SignupRequest;
@@ -107,6 +109,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
                 if(response.isSuccessful()) {
+                    SharedPreferencesManager.setString(Constant.PREF_TOKEN, response.body().getJwt());
+                    SharedPreferencesManager.setString(Constant.PREF_USERNAME, response.body().getUserName());
+                    SharedPreferencesManager.setString(Constant.PREF_EMAIL, response.body().getEmail());
+
                     Toast.makeText(SignUpActivity.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
                     startActivity(intent);

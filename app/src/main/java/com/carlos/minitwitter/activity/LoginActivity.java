@@ -10,7 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.carlos.minitwitter.R;
+import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
+import com.carlos.minitwitter.common.SharedPreferencesManager;
 import com.carlos.minitwitter.retrofit.MiniTwitterClient;
 import com.carlos.minitwitter.retrofit.MiniTwitterService;
 import com.carlos.minitwitter.retrofit.request.LoginRequest;
@@ -91,7 +93,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Inicio sesion exitoso", Toast.LENGTH_SHORT).show();
+                    SharedPreferencesManager.setString(Constant.PREF_TOKEN, response.body().getJwt());
+                    SharedPreferencesManager.setString(Constant.PREF_USERNAME, response.body().getUserName());
+                    SharedPreferencesManager.setString(Constant.PREF_EMAIL, response.body().getEmail());
+                    Toast.makeText(LoginActivity.this, "Inicio sesion exitoso" , Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                     startActivity(intent);
                     finish();
