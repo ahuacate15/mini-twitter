@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/iAvatar"
+        app:layout_constraintTop_toTopOf="@+id/iAvatar" />
+
+    <TextView
+        android:id="@+id/tMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tUserName"
+        app:layout_constraintTop_toBottomOf="@+id/tUserName" />
+
+    <ImageView
+        android:id="@+id/iStar"
+        android:layout_width="16dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/tMessage"
+        app:layout_constraintTop_toBottomOf="@+id/tMessage"
+        app:srcCompat="@drawable/ic_baseline_star_border_24" />
+
+    <TextView
+        android:id="@+id/tCountLikes"
+        android:layout_width="6dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iStar"
+        app:layout_constraintStart_toEndOf="@+id/iStar"
+        app:layout_constraintTop_toTopOf="@+id/iStar" />
+
+    <TextView
+        android:id="@+id/tTweetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="TextView"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iStar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iStar" />
+</androidx.constraintlayout.widget.ConstraintLayout>
