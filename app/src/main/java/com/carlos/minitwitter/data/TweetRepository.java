@@ -9,10 +9,12 @@ import com.carlos.minitwitter.common.ConvertToGson;
 import com.carlos.minitwitter.common.MyApplication;
 import com.carlos.minitwitter.retrofit.TweetClient;
 import com.carlos.minitwitter.retrofit.TweetService;
+import com.carlos.minitwitter.retrofit.request.TweetRequest;
 import com.carlos.minitwitter.retrofit.response.ErrorResponse;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,22 +25,30 @@ public class TweetRepository {
 
     private TweetService tweetService;
     private TweetClient tweetClient;
+    private MutableLiveData<List<TweetResponse>> allTweets;
 
     public TweetRepository() {
         this.tweetClient = TweetClient.getInstance();
         this.tweetService = this.tweetClient.getTweetService();
-        getAllTweets();
+        fetchTweets();
     }
 
     public LiveData<List<TweetResponse>> getAllTweets() {
-        final MutableLiveData<List<TweetResponse>> data = new MutableLiveData<>();
+        return allTweets;
+    }
+
+    public MutableLiveData<List<TweetResponse>> fetchTweets() {
+
+        if(allTweets == null) {
+            allTweets = new MutableLiveData<>();
+        }
 
         Call<List<TweetResponse>> call = tweetService.getAllTweets();
         call.enqueue(new Callback<List<TweetResponse>>() {
             @Override
             public void onResponse(Call<List<TweetResponse>> call, Response<List<TweetResponse>> response) {
                 if(response.isSuccessful()) {
-                    data.setValue(response.body());
+                    allTweets.setValue(response.body());
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -55,6 +65,40 @@ public class TweetRepository {
             }
         });
 
-        return data;
+        return allTweets;
+    }
+
+    public void createNewTweet(String message) {
+        TweetRequest tweet = new TweetRequest(message);
+        Call<TweetResponse> call = tweetService.create(tweet);
+
+        call.enqueue(new Callback<TweetResponse>() {
+            @Override
+            public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
+                if(response.isSuccessful()) {
+                    List<TweetResponse> listClone = new ArrayList<>();
+                    listClone.add(response.body());
+
+                    int totalTweets = allTweets.getValue().size();
+                    for(int i=0; i<totalTweets; i++) {
+                        listClone.add(new TweetResponse(allTweets.getValue().get(i)));
+                    }
+                    allTweets.setValue(listClone);
+                    Toast.makeText(MyApplication.getContext(), "Tu tweet ha sido creado", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
+                        Toast.makeText(MyApplication.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TweetResponse> call, Throwable t) {
+                Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

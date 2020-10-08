@@ -1,28 +1,28 @@
 package com.carlos.minitwitter.data;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.util.List;
 
-public class TweetViewModel extends AndroidViewModel {
+public class TweetViewModel extends ViewModel {
 
     private TweetRepository tweetRepository;
     private LiveData<List<TweetResponse>> listTweet;
 
-    public TweetViewModel(@NonNull Application application) {
-        super(application);
+    public TweetViewModel() {
         tweetRepository = new TweetRepository();
-        listTweet = tweetRepository.getAllTweets();
+        listTweet = tweetRepository.fetchTweets();
     }
 
     public LiveData<List<TweetResponse>> getAllTweets() {
         return listTweet;
+    }
+
+    public void createNewTweet(String message) {
+        tweetRepository.createNewTweet(message);
     }
 
 }

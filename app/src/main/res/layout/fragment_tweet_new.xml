@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iCloseNewTweet"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_close_24"
+        app:tint="@color/colorPrimaryDark" />
+
+    <Button
+        android:id="@+id/bCreateNewTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/bg_new_tweet_button"
+        android:text="Tweetear"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iCloseNewTweet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iCloseNewTweet" />
+
+    <ImageView
+        android:id="@+id/iAvatarNewTweet"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/iCloseNewTweet"
+        app:layout_constraintStart_toStartOf="@+id/iCloseNewTweet"
+        app:layout_constraintTop_toBottomOf="@+id/iCloseNewTweet"
+        app:tint="@color/colorBlue"
+        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+    <EditText
+        android:id="@+id/edTweetMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:background="@color/colorWhite"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:paddingTop="8dp"
+        android:singleLine="false"
+        android:hint="¿Qué estás pensando?"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iAvatarNewTweet"
+        app:layout_constraintTop_toTopOf="@+id/iAvatarNewTweet" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

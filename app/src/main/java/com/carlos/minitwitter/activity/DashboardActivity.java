@@ -1,6 +1,7 @@
 package com.carlos.minitwitter.activity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,11 +13,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.fragment.HomeFragment;
+import com.carlos.minitwitter.fragment.NewTweetFragment;
 import com.carlos.minitwitter.fragment.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private FloatingActionButton bNewTweet;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -25,6 +29,8 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bNewTweet = findViewById(R.id.bNewTweet);
+        bNewTweet.setOnClickListener(this);
 
         getSupportActionBar().hide();
 
@@ -32,6 +38,8 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.navDashboardFragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+
 
         //cargar fragmento por defecto
         /*
@@ -41,5 +49,17 @@ public class DashboardActivity extends AppCompatActivity {
                 .add(R.id.navigation_profile, new ProfileFragment())
                 .commit();
          */
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.bNewTweet) {
+            openNewTweetFragment();
+        }
+    }
+
+    private void openNewTweetFragment() {
+        NewTweetFragment dialog = new NewTweetFragment();
+        dialog.show(getSupportFragmentManager(), "NewTweetFragment");
     }
 }

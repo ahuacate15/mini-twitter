@@ -33,6 +33,14 @@ public class TweetResponse {
 
     public TweetResponse() {}
 
+    public TweetResponse(TweetResponse tweetResponse) {
+        this.id = tweetResponse.getId();
+        this.createdDate = tweetResponse.getCreatedDate();
+        this.message = tweetResponse.getMessage();
+        this.countLikes = tweetResponse.getCountLikes();
+        this.userName = tweetResponse.getUserName();
+    }
+
     public int getId() {
         return id;
     }
