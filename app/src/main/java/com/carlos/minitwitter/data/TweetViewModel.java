@@ -17,12 +17,25 @@ public class TweetViewModel extends ViewModel {
         listTweet = tweetRepository.fetchTweets();
     }
 
+    public LiveData<List<TweetResponse>> fetchAllTweets() {
+        listTweet = tweetRepository.fetchTweets();
+        return listTweet;
+    }
+
     public LiveData<List<TweetResponse>> getAllTweets() {
         return listTweet;
     }
 
     public void createNewTweet(String message) {
         tweetRepository.createNewTweet(message);
+    }
+
+    public void like(int idTweet) {
+        tweetRepository.like(idTweet);
+    }
+
+    public void unlike(int idTweet) {
+        tweetRepository.unlike(idTweet);
     }
 
 }

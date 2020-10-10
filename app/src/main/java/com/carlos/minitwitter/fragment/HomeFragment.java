@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.adapter.TweetAdapter;
@@ -22,11 +24,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int mColumn = 1;
     private List<TweetResponse> listTweet;
     private TweetAdapter tweetAdapter;
+    private SwipeRefreshLayout swTweetList;
     private RecyclerView rTweetList;
     private TweetViewModel tweetViewModel;
     private BottomNavigationView bottomNavigationView;
@@ -46,6 +49,10 @@ public class HomeFragment extends Fragment {
 
         bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         rTweetList = view.findViewById(R.id.rTweetList);
+        swTweetList = view.findViewById(R.id.swTweetList);
+
+        swTweetList.setOnRefreshListener(this::onRefresh);
+        swTweetList.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         Context context = view.getContext();
         if(mColumn <= 1) {
@@ -65,6 +72,26 @@ public class HomeFragment extends Fragment {
         tweetViewModel.getAllTweets().observe(getActivity(), tweetResponses -> {
             listTweet = tweetResponses;
             tweetAdapter.setData(listTweet);
+
+            /**
+             * la lista de tweets posee 2 observer de forma simultanea, desactivo este
+             * una vez cargada se haya cargado la lista. el segundo observer (fetchAllTweets) queda activo
+             */
+            tweetViewModel.getAllTweets().removeObservers(this);
         });
+    }
+
+    private void fetchAllTweets() {
+        tweetViewModel.fetchAllTweets().observe(getActivity(), tweetResponses -> {
+            swTweetList.setRefreshing(false);
+            listTweet = tweetResponses;
+            tweetAdapter.setData(listTweet);
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        swTweetList.setRefreshing(true);
+        fetchAllTweets();
     }
 }

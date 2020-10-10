@@ -1,7 +1,9 @@
 package com.carlos.minitwitter.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.SharedPreferencesManager;
+import com.carlos.minitwitter.data.TweetViewModel;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.text.SimpleDateFormat;
@@ -25,12 +33,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<TweetResponse> listTweet;
     private String userName;
     private SimpleDateFormat dateFormat;
+    private TweetViewModel tweetViewModel;
+
+    private static final String TAG = "TweetAdapter";
 
     public TweetAdapter(Context context, List<TweetResponse> listTweet) {
         this.listTweet = listTweet;
         this.context = context;
         userName = SharedPreferencesManager.getString(Constant.PREF_USERNAME);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
+        tweetViewModel = new ViewModelProvider((FragmentActivity) this.context).get(TweetViewModel.class);
     }
 
     @NonNull
@@ -48,14 +60,43 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             return;
 
         holder.tweetResponse = listTweet.get(position);
-        holder.tUserName.setText(holder.tweetResponse.getUserName());
+        holder.tUserName.setText("@".concat(holder.tweetResponse.getUserName()));
         holder.tMessage.setText(holder.tweetResponse.getMessage());
         holder.tTweetDate.setText(dateFormat.format(holder.tweetResponse.getCreatedDate()));
 
+        if(holder.tweetResponse.getMyLike() > 0) {
+            //estrella seleccionada
+            Glide.with(context)
+                    .load(R.drawable.ic_baseline_star_24_pink)
+                    .into(holder.iStar);
+
+            holder.iStar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tweetViewModel.unlike(holder.tweetResponse.getIdTweet());
+                }
+            });
+
+        } else {
+            //estrella no seleccionada
+            Glide.with(context)
+                    .load(R.drawable.ic_baseline_star_border_24)
+                    .into(holder.iStar);
+
+            holder.iStar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tweetViewModel.like(holder.tweetResponse.getIdTweet());
+                }
+            });
+        }
+
         if(holder.tweetResponse.getCountLikes() > 0) {
-            holder.iStar.setColorFilter(context.getColor(R.color.colorRedDarken4));
             holder.tCountLikes.setText(String.valueOf(holder.tweetResponse.getCountLikes()));
             holder.tCountLikes.setTypeface(null, Typeface.BOLD);
+        } else {
+            holder.tCountLikes.setText("0");
+            holder.tCountLikes.setTypeface(null, Typeface.NORMAL);
         }
     }
 
