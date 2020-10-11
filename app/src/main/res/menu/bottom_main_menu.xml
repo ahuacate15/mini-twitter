@@ -4,8 +4,12 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="@string/title_activity_home"
-        />
+        android:title="@string/title_activity_home"  />
+
+    <item
+        android:id="@+id/navigation_tweet_fav"
+        android:icon="@drawable/ic_baseline_star_24_pink"
+        android:title="@string/title_tweet_fav" />
 
     <item
         android:id="@+id/navigation_profile"

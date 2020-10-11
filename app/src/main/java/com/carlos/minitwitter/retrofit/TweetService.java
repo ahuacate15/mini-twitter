@@ -22,6 +22,9 @@ public interface TweetService {
     @GET("tweet/all")
     public Call<List<TweetResponse>> getAllTweets();
 
+    @GET("tweet/fav")
+    public Call<List<TweetResponse>> getFavTweets();
+
     @PUT("tweet/like/{id}")
     public Call<TweetResponse> like(@Path("id") int id);
 

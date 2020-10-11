@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MiniTwitter</string>
     <string name="title_activity_home">Inicio</string>
+    <string name="title_tweet_fav">Favoritos</string>
     <string name="title_activity_profile">Perfil</string>
 </resources>

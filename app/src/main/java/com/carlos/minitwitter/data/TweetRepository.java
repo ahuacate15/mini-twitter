@@ -5,6 +5,7 @@ import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
 import com.carlos.minitwitter.common.MyApplication;
 import com.carlos.minitwitter.retrofit.TweetClient;
@@ -69,6 +70,37 @@ public class TweetRepository {
         return allTweets;
     }
 
+    public MutableLiveData<List<TweetResponse>> fetchFavTweets() {
+
+        if(allTweets == null) {
+            allTweets = new MutableLiveData<>();
+        }
+
+        Call<List<TweetResponse>> call = tweetService.getFavTweets();
+        call.enqueue(new Callback<List<TweetResponse>>() {
+            @Override
+            public void onResponse(Call<List<TweetResponse>> call, Response<List<TweetResponse>> response) {
+                if(response.isSuccessful()) {
+                    allTweets.setValue(response.body());
+                } else {
+                    try {
+                        ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
+                        Toast.makeText(MyApplication.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TweetResponse>> call, Throwable t) {
+                Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return allTweets;
+    }
+
     public void createNewTweet(String message) {
         TweetRequest tweet = new TweetRequest(message);
         Call<TweetResponse> call = tweetService.create(tweet);
@@ -103,14 +135,18 @@ public class TweetRepository {
         });
     }
 
-    public void like(int idTweet) {
+    public void like(int idTweet, int tweetListType) {
         Call<TweetResponse> call = tweetService.like(idTweet);
 
         call.enqueue(new Callback<TweetResponse>() {
             @Override
             public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
                if(response.isSuccessful()) {
-                   allTweets.setValue(getUpdatedListTweet(allTweets.getValue(), response.body()));
+                   allTweets.setValue(
+                           tweetListType == Constant.TWEET_ALL ?
+                           getUpdatedListTweet(allTweets.getValue(), response.body()) :
+                           removeTweetFromList(allTweets.getValue(), response.body())
+                   );
                } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -128,14 +164,18 @@ public class TweetRepository {
         });
     }
 
-    public void unlike(int idTweet) {
+    public void unlike(int idTweet, int tweetListType) {
         Call<TweetResponse> call = tweetService.unlike(idTweet);
 
         call.enqueue(new Callback<TweetResponse>() {
             @Override
             public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
                 if(response.isSuccessful()) {
-                    allTweets.setValue(getUpdatedListTweet(allTweets.getValue(), response.body()));
+                    allTweets.setValue(
+                            tweetListType == Constant.TWEET_ALL ?
+                            getUpdatedListTweet(allTweets.getValue(), response.body()) :
+                            removeTweetFromList(allTweets.getValue(), response.body())
+                    );
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -148,13 +188,13 @@ public class TweetRepository {
 
             @Override
             public void onFailure(Call<TweetResponse> call, Throwable t) {
-
+                Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
-     * reemplazo el tweet de una lista, buscando por id
+     * reemplazo el tweet de una lista, segun id_tweet
      */
     private List<TweetResponse> getUpdatedListTweet(List<TweetResponse> listTweet, TweetResponse tweetResponse) {
 
@@ -162,6 +202,22 @@ public class TweetRepository {
         for(int i=0; i<totalTweets; i++) {
             if(listTweet.get(i).getIdTweet() == tweetResponse.getIdTweet()) {
                 listTweet.set(i, tweetResponse);
+                break;
+            }
+        }
+
+        return listTweet;
+    }
+
+    /**
+     *
+     * elimino un tweet de la lista, segun id_tweet
+     */
+    private List<TweetResponse> removeTweetFromList(List<TweetResponse> listTweet, TweetResponse tweetResponse)  {
+        int totalTweets = listTweet.size();
+        for(int i=0; i<totalTweets; i++) {
+            if(listTweet.get(i).getIdTweet() == tweetResponse.getIdTweet()) {
+                listTweet.remove(i);
                 break;
             }
         }

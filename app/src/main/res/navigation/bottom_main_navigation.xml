@@ -7,9 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.carlos.minitwitter.fragment.HomeFragment"
+        android:name="com.carlos.minitwitter.fragment.TweetFragment"
         android:label="@string/title_activity_home"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="tweetListType"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_tweet_fav"
+        android:name="com.carlos.minitwitter.fragment.TweetFragment"
+        android:label="@string/title_tweet_fav"
+        tools:layout="@layout/fragment_home" >
+        <argument
+            android:name="tweetListType"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"

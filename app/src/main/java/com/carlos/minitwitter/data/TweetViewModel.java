@@ -22,6 +22,11 @@ public class TweetViewModel extends ViewModel {
         return listTweet;
     }
 
+    public LiveData<List<TweetResponse>> fetchFavTweets() {
+        listTweet = tweetRepository.fetchFavTweets();
+        return listTweet;
+    }
+
     public LiveData<List<TweetResponse>> getAllTweets() {
         return listTweet;
     }
@@ -30,12 +35,12 @@ public class TweetViewModel extends ViewModel {
         tweetRepository.createNewTweet(message);
     }
 
-    public void like(int idTweet) {
-        tweetRepository.like(idTweet);
+    public void like(int idTweet, int tweetListType) {
+        tweetRepository.like(idTweet, tweetListType);
     }
 
-    public void unlike(int idTweet) {
-        tweetRepository.unlike(idTweet);
+    public void unlike(int idTweet, int tweetListType) {
+        tweetRepository.unlike(idTweet, tweetListType);
     }
 
 }

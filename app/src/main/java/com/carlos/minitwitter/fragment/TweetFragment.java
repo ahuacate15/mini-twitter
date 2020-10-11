@@ -2,6 +2,7 @@ package com.carlos.minitwitter.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +19,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.adapter.TweetAdapter;
+import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.data.TweetViewModel;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class TweetFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private int mColumn = 1;
+    private int tweetListType = Constant.TWEET_ALL; //por defecto de muestran todos los tweets
     private List<TweetResponse> listTweet;
     private TweetAdapter tweetAdapter;
     private SwipeRefreshLayout swTweetList;
@@ -34,7 +36,15 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TweetViewModel tweetViewModel;
     private BottomNavigationView bottomNavigationView;
 
-    public HomeFragment() {}
+    private static final String TAG = "TweetFragment";
+
+    public static TweetFragment newInstance(int tweetListType) {
+        TweetFragment fragment = new TweetFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constant.TWEET_LIST_TYPE, tweetListType);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +57,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
 
+        tweetListType = getArguments().getInt("tweetListType");
         bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         rTweetList = view.findViewById(R.id.rTweetList);
         swTweetList = view.findViewById(R.id.swTweetList);
@@ -55,16 +66,23 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swTweetList.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         Context context = view.getContext();
-        if(mColumn <= 1) {
-            rTweetList.setLayoutManager(new LinearLayoutManager(context));
-        } else {
-            rTweetList.setLayoutManager(new GridLayoutManager(context, mColumn));
-        }
+        rTweetList.setLayoutManager(new LinearLayoutManager(context));
 
         tweetAdapter = new TweetAdapter(getActivity(), listTweet);
+
+        //identifico si muestro todos los tweets o solo favoritos
+        tweetAdapter.setTweetListType(tweetListType);
+
         rTweetList.setAdapter(tweetAdapter);
 
-        loadTweetData();
+
+        if(tweetListType == Constant.TWEET_ALL) {
+
+            fetchAllTweets();
+        } else {
+            fetchFavTweets();
+        }
+
         return view;
     }
 
@@ -81,8 +99,17 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
+
     private void fetchAllTweets() {
         tweetViewModel.fetchAllTweets().observe(getActivity(), tweetResponses -> {
+            swTweetList.setRefreshing(false);
+            listTweet = tweetResponses;
+            tweetAdapter.setData(listTweet);
+        });
+    }
+
+    private void fetchFavTweets() {
+        tweetViewModel.fetchFavTweets().observe(getActivity(), tweetResponses -> {
             swTweetList.setRefreshing(false);
             listTweet = tweetResponses;
             tweetAdapter.setData(listTweet);
@@ -92,6 +119,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         swTweetList.setRefreshing(true);
-        fetchAllTweets();
+        if(tweetListType == Constant.TWEET_ALL) {
+            fetchAllTweets();
+        } else {
+            fetchFavTweets();
+        }
+
     }
 }
