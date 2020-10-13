@@ -34,7 +34,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private String userName;
     private SimpleDateFormat dateFormat;
     private TweetViewModel tweetViewModel;
-    private int tweetListType = Constant.TWEET_ALL;
 
     private static final String TAG = "TweetAdapter";
 
@@ -44,10 +43,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         userName = SharedPreferencesManager.getString(Constant.PREF_USERNAME);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
         tweetViewModel = new ViewModelProvider((FragmentActivity) this.context).get(TweetViewModel.class);
-    }
-
-    public void setTweetListType(int tweetListType) {
-        this.tweetListType = tweetListType;
     }
 
     @NonNull
@@ -78,7 +73,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.iStar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tweetViewModel.unlike(holder.tweetResponse.getIdTweet(), tweetListType);
+                    tweetViewModel.unlike(holder.tweetResponse.getIdTweet());
+                    Log.d(TAG, "unlike tweet");
                 }
             });
 
@@ -91,7 +87,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.iStar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tweetViewModel.like(holder.tweetResponse.getIdTweet(), tweetListType);
+                    tweetViewModel.like(holder.tweetResponse.getIdTweet());
+                    Log.d(TAG, "like tweet");
                 }
             });
         }

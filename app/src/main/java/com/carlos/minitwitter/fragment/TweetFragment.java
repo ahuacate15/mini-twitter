@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -38,25 +38,18 @@ public class TweetFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private static final String TAG = "TweetFragment";
 
-    public static TweetFragment newInstance(int tweetListType) {
-        TweetFragment fragment = new TweetFragment();
-        Bundle args = new Bundle();
-        args.putInt(Constant.TWEET_LIST_TYPE, tweetListType);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tweetViewModel = new ViewModelProvider(getActivity()).get(TweetViewModel.class);
+        Log.d(TAG, "onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
-
+        Log.d(TAG, "onCreateView");
         tweetListType = getArguments().getInt("tweetListType");
         bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         rTweetList = view.findViewById(R.id.rTweetList);
@@ -70,52 +63,46 @@ public class TweetFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         tweetAdapter = new TweetAdapter(getActivity(), listTweet);
 
-        //identifico si muestro todos los tweets o solo favoritos
-        tweetAdapter.setTweetListType(tweetListType);
-
         rTweetList.setAdapter(tweetAdapter);
 
-
         if(tweetListType == Constant.TWEET_ALL) {
-
             fetchAllTweets();
         } else {
-            fetchFavTweets();
+            getFavTweets();
         }
 
         return view;
     }
-
-    private void loadTweetData() {
-        tweetViewModel.getAllTweets().observe(getActivity(), tweetResponses -> {
-            listTweet = tweetResponses;
-            tweetAdapter.setData(listTweet);
-
-            /**
-             * la lista de tweets posee 2 observer de forma simultanea, desactivo este
-             * una vez cargada se haya cargado la lista. el segundo observer (fetchAllTweets) queda activo
-             */
-            tweetViewModel.getAllTweets().removeObservers(this);
-        });
-    }
-
 
     private void fetchAllTweets() {
         tweetViewModel.fetchAllTweets().observe(getActivity(), tweetResponses -> {
             swTweetList.setRefreshing(false);
             listTweet = tweetResponses;
             tweetAdapter.setData(listTweet);
+            Log.d(TAG, "fetchAllTweets");
+        });
+    }
+
+    private void getFavTweets() {
+        tweetViewModel.getFavTweets().observe(getActivity(), tweetResponses -> {
+            swTweetList.setRefreshing(false);
+            listTweet = tweetResponses;
+            tweetAdapter.setData(listTweet);
+            Log.d(TAG, "getFavTweets");
         });
     }
 
     private void fetchFavTweets() {
-        tweetViewModel.fetchFavTweets().observe(getActivity(), tweetResponses -> {
-            swTweetList.setRefreshing(false);
-            listTweet = tweetResponses;
-            tweetAdapter.setData(listTweet);
+        tweetViewModel.fetchFavTweets().observe(getActivity(), new Observer<List<TweetResponse>>() {
+            @Override
+            public void onChanged(List<TweetResponse> tweetResponses) {
+                swTweetList.setRefreshing(false);
+                listTweet = tweetResponses;
+                tweetAdapter.setData(listTweet);
+                Log.d(TAG, "fetchFavTweets");
+            }
         });
     }
-
     @Override
     public void onRefresh() {
         swTweetList.setRefreshing(true);

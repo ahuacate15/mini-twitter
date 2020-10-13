@@ -1,18 +1,16 @@
 package com.carlos.minitwitter.data;
 
+import android.util.Log;
 import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
 import com.carlos.minitwitter.common.MyApplication;
 import com.carlos.minitwitter.retrofit.TweetClient;
 import com.carlos.minitwitter.retrofit.TweetService;
 import com.carlos.minitwitter.retrofit.request.TweetRequest;
 import com.carlos.minitwitter.retrofit.response.ErrorResponse;
-import com.carlos.minitwitter.retrofit.response.GenericResponse;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.io.IOException;
@@ -28,15 +26,14 @@ public class TweetRepository {
     private TweetService tweetService;
     private TweetClient tweetClient;
     private MutableLiveData<List<TweetResponse>> allTweets;
+    private MutableLiveData<List<TweetResponse>> favTweets;
+
+    private static final String TAG = "TweetRepository";
 
     public TweetRepository() {
         this.tweetClient = TweetClient.getInstance();
         this.tweetService = this.tweetClient.getTweetService();
         fetchTweets();
-    }
-
-    public LiveData<List<TweetResponse>> getAllTweets() {
-        return allTweets;
     }
 
     public MutableLiveData<List<TweetResponse>> fetchTweets() {
@@ -45,12 +42,17 @@ public class TweetRepository {
             allTweets = new MutableLiveData<>();
         }
 
+        if(favTweets == null) {
+            favTweets = new MutableLiveData<>();
+        }
+
         Call<List<TweetResponse>> call = tweetService.getAllTweets();
         call.enqueue(new Callback<List<TweetResponse>>() {
             @Override
             public void onResponse(Call<List<TweetResponse>> call, Response<List<TweetResponse>> response) {
                 if(response.isSuccessful()) {
                     allTweets.setValue(response.body());
+                    favTweets.setValue(getFavoriteTweetsFromList(response.body()));
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -70,10 +72,13 @@ public class TweetRepository {
         return allTweets;
     }
 
-    public MutableLiveData<List<TweetResponse>> fetchFavTweets() {
+    public MutableLiveData<List<TweetResponse>> getFavTweets() {
+        return favTweets;
+    }
 
-        if(allTweets == null) {
-            allTweets = new MutableLiveData<>();
+    public MutableLiveData<List<TweetResponse>> fetchFavTweets() {
+        if(favTweets == null) {
+            favTweets = new MutableLiveData<>();
         }
 
         Call<List<TweetResponse>> call = tweetService.getFavTweets();
@@ -81,7 +86,7 @@ public class TweetRepository {
             @Override
             public void onResponse(Call<List<TweetResponse>> call, Response<List<TweetResponse>> response) {
                 if(response.isSuccessful()) {
-                    allTweets.setValue(response.body());
+                    favTweets.setValue(response.body());
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -97,8 +102,7 @@ public class TweetRepository {
                 Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo", Toast.LENGTH_SHORT).show();
             }
         });
-
-        return allTweets;
+        return favTweets;
     }
 
     public void createNewTweet(String message) {
@@ -135,18 +139,23 @@ public class TweetRepository {
         });
     }
 
-    public void like(int idTweet, int tweetListType) {
+    public void like(int idTweet) {
+
         Call<TweetResponse> call = tweetService.like(idTweet);
 
         call.enqueue(new Callback<TweetResponse>() {
             @Override
             public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
                if(response.isSuccessful()) {
-                   allTweets.setValue(
-                           tweetListType == Constant.TWEET_ALL ?
-                           getUpdatedListTweet(allTweets.getValue(), response.body()) :
-                           removeTweetFromList(allTweets.getValue(), response.body())
-                   );
+                   /* marco un tweet como favorito */
+                   allTweets.setValue(getUpdatedListTweet(allTweets.getValue(), response.body()));
+
+                   /* agrego un tweet a la lista de favoritos */
+                   List<TweetResponse> tmpFavTweets = favTweets.getValue();
+                   tmpFavTweets.add(response.body());
+                   favTweets.setValue(tmpFavTweets);
+
+                   Log.d(TAG, "like tweet");
                } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -164,18 +173,20 @@ public class TweetRepository {
         });
     }
 
-    public void unlike(int idTweet, int tweetListType) {
+    public void unlike(int idTweet) {
         Call<TweetResponse> call = tweetService.unlike(idTweet);
 
         call.enqueue(new Callback<TweetResponse>() {
             @Override
             public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
                 if(response.isSuccessful()) {
-                    allTweets.setValue(
-                            tweetListType == Constant.TWEET_ALL ?
-                            getUpdatedListTweet(allTweets.getValue(), response.body()) :
-                            removeTweetFromList(allTweets.getValue(), response.body())
-                    );
+                    /* descarmo un tweet favorito */
+                    allTweets.setValue(getUpdatedListTweet(allTweets.getValue(), response.body()));
+
+                    /* elimino un tweet a la lista de favoritos */
+                    favTweets.setValue(removeTweetFromList(favTweets.getValue(), response.body()));
+
+                    Log.d(TAG, "unlike tweet");
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -223,5 +234,22 @@ public class TweetRepository {
         }
 
         return listTweet;
+    }
+
+    /**
+     *
+     * obtengo la lista de tweets favoritos, a partir de la lista principal
+     */
+    private List<TweetResponse> getFavoriteTweetsFromList(List<TweetResponse> listTweet) {
+        List<TweetResponse> listFavTweets = new ArrayList<>();
+        int totalTweets = listTweet.size();
+
+        for(int i=0; i<totalTweets; i++) {
+            if(listTweet.get(i).getMyLike() > 0) {
+                listFavTweets.add(listTweet.get(i));
+            }
+        }
+
+        return listFavTweets;
     }
 }

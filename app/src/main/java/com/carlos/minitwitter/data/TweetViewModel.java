@@ -1,6 +1,7 @@
 package com.carlos.minitwitter.data;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
@@ -11,10 +12,12 @@ public class TweetViewModel extends ViewModel {
 
     private TweetRepository tweetRepository;
     private LiveData<List<TweetResponse>> listTweet;
+    private LiveData<List<TweetResponse>> listFavTweets;
 
     public TweetViewModel() {
         tweetRepository = new TweetRepository();
-        listTweet = tweetRepository.fetchTweets();
+        listTweet = new MutableLiveData<>();
+        listFavTweets = new MutableLiveData<>();
     }
 
     public LiveData<List<TweetResponse>> fetchAllTweets() {
@@ -22,25 +25,26 @@ public class TweetViewModel extends ViewModel {
         return listTweet;
     }
 
-    public LiveData<List<TweetResponse>> fetchFavTweets() {
-        listTweet = tweetRepository.fetchFavTweets();
-        return listTweet;
+    public LiveData<List<TweetResponse>> getFavTweets() {
+        listFavTweets = tweetRepository.getFavTweets();
+        return listFavTweets;
     }
 
-    public LiveData<List<TweetResponse>> getAllTweets() {
-        return listTweet;
+    public LiveData<List<TweetResponse>> fetchFavTweets() {
+        listFavTweets = tweetRepository.fetchFavTweets();
+        return listFavTweets;
     }
 
     public void createNewTweet(String message) {
         tweetRepository.createNewTweet(message);
     }
 
-    public void like(int idTweet, int tweetListType) {
-        tweetRepository.like(idTweet, tweetListType);
+    public void like(int idTweet) {
+        tweetRepository.like(idTweet);
     }
 
-    public void unlike(int idTweet, int tweetListType) {
-        tweetRepository.unlike(idTweet, tweetListType);
+    public void unlike(int idTweet) {
+        tweetRepository.unlike(idTweet);
     }
 
 }
