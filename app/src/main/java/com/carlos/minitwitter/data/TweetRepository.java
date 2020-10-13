@@ -52,7 +52,6 @@ public class TweetRepository {
             public void onResponse(Call<List<TweetResponse>> call, Response<List<TweetResponse>> response) {
                 if(response.isSuccessful()) {
                     allTweets.setValue(response.body());
-                    favTweets.setValue(getFavoriteTweetsFromList(response.body()));
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -73,6 +72,7 @@ public class TweetRepository {
     }
 
     public MutableLiveData<List<TweetResponse>> getFavTweets() {
+        favTweets.setValue(getFavoriteTweetsFromList(allTweets.getValue()));
         return favTweets;
     }
 

@@ -65,12 +65,12 @@ public class TweetFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         rTweetList.setAdapter(tweetAdapter);
 
+        /* cargo todos los tweets */
         if(tweetListType == Constant.TWEET_ALL) {
             fetchAllTweets();
         } else {
             getFavTweets();
         }
-
         return view;
     }
 
