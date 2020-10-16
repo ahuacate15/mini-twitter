@@ -100,6 +100,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.tCountLikes.setText("0");
             holder.tCountLikes.setTypeface(null, Typeface.NORMAL);
         }
+
+        holder.iShowMenuTweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tweetViewModel.openDialogMenuTweet(context, holder.tweetResponse.getIdTweet());
+            }
+        });
     }
 
     @Override
@@ -121,6 +128,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public final TextView tMessage;
         public final TextView tCountLikes;
         public final TextView tTweetDate;
+        public final ImageView iShowMenuTweet;
         public TweetResponse tweetResponse;
 
         public ViewHolder(@NonNull View view) {
@@ -132,6 +140,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tMessage = view.findViewById(R.id.tMessage);
             tCountLikes = view.findViewById(R.id.tCountLikes);
             tTweetDate = view.findViewById(R.id.tTweetDate);
+            iShowMenuTweet = view.findViewById(R.id.iShowMenuTweet);
         }
     }
 }

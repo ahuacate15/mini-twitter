@@ -37,6 +37,10 @@ public class TweetResponse {
 
     public TweetResponse() {}
 
+    public TweetResponse(int idTweet) {
+        this.idTweet = idTweet;
+    }
+
     public TweetResponse(TweetResponse tweetResponse) {
         this.idTweet = tweetResponse.getIdTweet();
         this.createdDate = tweetResponse.getCreatedDate();

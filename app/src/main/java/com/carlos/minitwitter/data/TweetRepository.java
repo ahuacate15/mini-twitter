@@ -11,6 +11,7 @@ import com.carlos.minitwitter.retrofit.TweetClient;
 import com.carlos.minitwitter.retrofit.TweetService;
 import com.carlos.minitwitter.retrofit.request.TweetRequest;
 import com.carlos.minitwitter.retrofit.response.ErrorResponse;
+import com.carlos.minitwitter.retrofit.response.GenericResponse;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.io.IOException;
@@ -180,7 +181,7 @@ public class TweetRepository {
             @Override
             public void onResponse(Call<TweetResponse> call, Response<TweetResponse> response) {
                 if(response.isSuccessful()) {
-                    /* descarmo un tweet favorito */
+                    /* desmarco un tweet favorito */
                     allTweets.setValue(getUpdatedListTweet(allTweets.getValue(), response.body()));
 
                     /* elimino un tweet a la lista de favoritos */
@@ -204,10 +205,41 @@ public class TweetRepository {
         });
     }
 
+    public void delete(final int idTweet) {
+        Call<GenericResponse> call = tweetService.delete(idTweet);
+        call.enqueue(new Callback<GenericResponse>() {
+            @Override
+            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                if(response.isSuccessful()) {
+                    TweetResponse deletedTweet = new TweetResponse(idTweet);
+                    /* elimino el tweet de la lista principal */
+                    allTweets.setValue(removeTweetFromList(allTweets.getValue(), deletedTweet));
+                    /* elimino el tweet de la lista de favoritos */
+                    favTweets.setValue(removeTweetFromList(favTweets.getValue(), deletedTweet));
+                } else {
+                    try {
+                        ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
+                        Toast.makeText(MyApplication.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericResponse> call, Throwable t) {
+                Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     /**
      * reemplazo el tweet de una lista, segun id_tweet
      */
     private List<TweetResponse> getUpdatedListTweet(List<TweetResponse> listTweet, TweetResponse tweetResponse) {
+
+        if(listTweet == null)
+            return new ArrayList<>();
 
         int totalTweets = listTweet.size();
         for(int i=0; i<totalTweets; i++) {
@@ -225,6 +257,9 @@ public class TweetRepository {
      * elimino un tweet de la lista, segun id_tweet
      */
     private List<TweetResponse> removeTweetFromList(List<TweetResponse> listTweet, TweetResponse tweetResponse)  {
+        if(listTweet == null)
+            return new ArrayList<>();
+
         int totalTweets = listTweet.size();
         for(int i=0; i<totalTweets; i++) {
             if(listTweet.get(i).getIdTweet() == tweetResponse.getIdTweet()) {

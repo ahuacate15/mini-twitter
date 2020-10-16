@@ -16,10 +16,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.carlos.minitwitter.R;
+import com.carlos.minitwitter.fragment.BottomModalTweetFragment;
 import com.carlos.minitwitter.fragment.TweetFragment;
 import com.carlos.minitwitter.fragment.NewTweetFragment;
 import com.carlos.minitwitter.fragment.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, NavController.OnDestinationChangedListener{
@@ -48,6 +50,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         navController.addOnDestinationChangedListener(this::onDestinationChanged);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
     }
 
     @Override

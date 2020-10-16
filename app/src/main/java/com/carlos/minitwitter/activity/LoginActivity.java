@@ -13,11 +13,13 @@ import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
 import com.carlos.minitwitter.common.SharedPreferencesManager;
+import com.carlos.minitwitter.fragment.BottomModalTweetFragment;
 import com.carlos.minitwitter.retrofit.MiniTwitterClient;
 import com.carlos.minitwitter.retrofit.MiniTwitterService;
 import com.carlos.minitwitter.retrofit.request.LoginRequest;
 import com.carlos.minitwitter.retrofit.response.ErrorResponse;
 import com.carlos.minitwitter.retrofit.response.LoginResponse;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONException;
 

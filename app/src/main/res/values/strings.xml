@@ -3,4 +3,6 @@
     <string name="title_activity_home">Inicio</string>
     <string name="title_tweet_fav">Favoritos</string>
     <string name="title_activity_profile">Perfil</string>
+
+    <string name="action_delete_tweet">Eliminar tweet</string>
 </resources>

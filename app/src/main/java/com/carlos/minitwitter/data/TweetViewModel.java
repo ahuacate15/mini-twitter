@@ -1,9 +1,13 @@
 package com.carlos.minitwitter.data;
 
+import android.content.Context;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.carlos.minitwitter.fragment.BottomModalTweetFragment;
 import com.carlos.minitwitter.retrofit.response.TweetResponse;
 
 import java.util.List;
@@ -13,6 +17,8 @@ public class TweetViewModel extends ViewModel {
     private TweetRepository tweetRepository;
     private LiveData<List<TweetResponse>> listTweet;
     private LiveData<List<TweetResponse>> listFavTweets;
+
+    private static final String TAG = "TweetViewModel";
 
     public TweetViewModel() {
         tweetRepository = new TweetRepository();
@@ -45,6 +51,15 @@ public class TweetViewModel extends ViewModel {
 
     public void unlike(int idTweet) {
         tweetRepository.unlike(idTweet);
+    }
+
+    public void delete(final int idTweet) {
+        tweetRepository.delete(idTweet);
+    }
+
+    public void openDialogMenuTweet(Context context, int idTweet) {
+        BottomModalTweetFragment fragment = BottomModalTweetFragment.newInstance(idTweet);
+        fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), TAG);
     }
 
 }

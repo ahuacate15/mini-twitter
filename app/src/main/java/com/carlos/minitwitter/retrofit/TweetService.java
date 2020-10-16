@@ -19,6 +19,9 @@ public interface TweetService {
     @POST("tweet")
     public Call<TweetResponse> create(@Body TweetRequest request);
 
+    @DELETE("tweet/{id}")
+    public Call<GenericResponse> delete(@Path("id") int id);
+
     @GET("tweet/all")
     public Call<List<TweetResponse>> getAllTweets();
 
