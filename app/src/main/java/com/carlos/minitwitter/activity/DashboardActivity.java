@@ -20,6 +20,7 @@ import com.carlos.minitwitter.fragment.BottomModalTweetFragment;
 import com.carlos.minitwitter.fragment.TweetFragment;
 import com.carlos.minitwitter.fragment.NewTweetFragment;
 import com.carlos.minitwitter.fragment.ProfileFragment;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private FloatingActionButton bNewTweet;
     private BottomNavigationView bottomNavigationView;
+    private AppBarLayout appBarLayout;
 
     private static String TAG = "DashboardActivity";
 
@@ -38,6 +40,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bNewTweet = findViewById(R.id.bNewTweet);
+        appBarLayout = findViewById(R.id.appBarLayout);
+
         bNewTweet.setOnClickListener(this);
 
         getSupportActionBar().hide();
@@ -67,6 +71,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+
+        appBarLayout.setVisibility(View.VISIBLE);
+
         switch (destination.getId()) {
             case R.id.navigation_home:
                 bNewTweet.show();
@@ -75,7 +82,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 bNewTweet.hide();
                 break;
             case R.id.navigation_profile:
-                bNewTweet.hide();;
+                bNewTweet.hide();
+                appBarLayout.setVisibility(View.INVISIBLE);
                 break;
         }
     }

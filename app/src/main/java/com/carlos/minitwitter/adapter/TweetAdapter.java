@@ -101,12 +101,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.tCountLikes.setTypeface(null, Typeface.NORMAL);
         }
 
-        holder.iShowMenuTweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tweetViewModel.openDialogMenuTweet(context, holder.tweetResponse.getIdTweet());
-            }
-        });
+        if(holder.tweetResponse.getUserName().equals(userName)) {
+            holder.iShowMenuTweet.setVisibility(View.VISIBLE);
+            holder.iShowMenuTweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tweetViewModel.openDialogMenuTweet(context, holder.tweetResponse.getIdTweet());
+                }
+            });
+        } else {
+            holder.iShowMenuTweet.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

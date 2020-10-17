@@ -32,6 +32,10 @@ public class TweetResponse {
     private int myLike;
 
     @Expose
+    @SerializedName("my_tweet")
+    private int myTweet;
+
+    @Expose
     @SerializedName("user_name")
     private String userName;
 
@@ -104,5 +108,13 @@ public class TweetResponse {
 
     public void setMyLike(int myLike) {
         this.myLike = myLike;
+    }
+
+    public int getMyTweet() {
+        return myTweet;
+    }
+
+    public void setMyTweet(int myTweet) {
+        this.myTweet = myTweet;
     }
 }
