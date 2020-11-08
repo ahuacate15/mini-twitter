@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.SharedPreferencesManager;
@@ -63,6 +64,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tUserName.setText("@".concat(holder.tweetResponse.getUserName()));
         holder.tMessage.setText(holder.tweetResponse.getMessage());
         holder.tTweetDate.setText(dateFormat.format(holder.tweetResponse.getCreatedDate()));
+
+        //foto de perfil del autor
+        if(holder.tweetResponse.getPhotoUrl() != null && !holder.tweetResponse.getPhotoUrl().equals("")) {
+            Glide.with(context)
+                    .load(Constant.API_URL + holder.tweetResponse.getPhotoUrl())
+                    .error(R.drawable.ic_baseline_account_circle_24)
+                    .dontAnimate()
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(holder.iAvatar);
+        }
+
 
         if(holder.tweetResponse.getMyLike() > 0) {
             //estrella seleccionada

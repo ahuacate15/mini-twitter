@@ -27,8 +27,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/imgToolbarPhoto"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iToolbarPhoto"
                         android:layout_width="34dp"
                         android:layout_height="35dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,14 +38,14 @@
                         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
                     <TextView
-                        android:id="@+id/lblToolbarUserName"
+                        android:id="@+id/tToolbarUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="TextView"
-                        app:layout_constraintBottom_toBottomOf="@+id/imgToolbarPhoto"
-                        app:layout_constraintStart_toEndOf="@+id/imgToolbarPhoto"
-                        app:layout_constraintTop_toTopOf="@+id/imgToolbarPhoto" />
+                        app:layout_constraintBottom_toBottomOf="@+id/iToolbarPhoto"
+                        app:layout_constraintStart_toEndOf="@+id/iToolbarPhoto"
+                        app:layout_constraintTop_toTopOf="@+id/iToolbarPhoto" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.appcompat.widget.Toolbar>

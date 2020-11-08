@@ -10,6 +10,7 @@ public class UserViewModel extends ViewModel {
     private UserRepository userRepository;
     private MutableLiveData<UserResponse> userProfile;
     private MutableLiveData<String> errorMessageToUpdate;
+    private MutableLiveData<String> photoProfile;
 
     public UserViewModel() {
         userRepository = new UserRepository();
@@ -23,5 +24,15 @@ public class UserViewModel extends ViewModel {
     public MutableLiveData<UserResponse> updateProfile(String field, String value) {
         userProfile = userRepository.updateProfile(field, value);
         return userProfile;
+    }
+
+    public MutableLiveData<String> uploadPhoto(String path) {
+        photoProfile = userRepository.uploadPhoto(path);
+        return photoProfile;
+    }
+
+    public MutableLiveData<String> fetchPhotoProfile() {
+        photoProfile = userRepository.getPhotoProfile();
+        return photoProfile;
     }
 }

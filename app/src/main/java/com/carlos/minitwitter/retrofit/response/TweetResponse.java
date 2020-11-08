@@ -39,6 +39,10 @@ public class TweetResponse {
     @SerializedName("user_name")
     private String userName;
 
+    @Expose
+    @SerializedName("photo_url")
+    private String photoUrl;
+
     public TweetResponse() {}
 
     public TweetResponse(int idTweet) {
@@ -52,6 +56,7 @@ public class TweetResponse {
         this.countLikes = tweetResponse.getCountLikes();
         this.userName = tweetResponse.getUserName();
         this.myLike = tweetResponse.myLike;
+        this.photoUrl = tweetResponse.photoUrl;
     }
 
     public int getIdTweet() {
@@ -116,5 +121,13 @@ public class TweetResponse {
 
     public void setMyTweet(int myTweet) {
         this.myTweet = myTweet;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

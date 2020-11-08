@@ -1,25 +1,36 @@
 package com.carlos.minitwitter.fragment;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carlos.minitwitter.R;
+import com.carlos.minitwitter.common.Constant;
+import com.carlos.minitwitter.common.MyApplication;
+import com.carlos.minitwitter.common.SharedPreferencesManager;
 import com.carlos.minitwitter.data.UserViewModel;
 import com.carlos.minitwitter.retrofit.response.UserResponse;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.single.CompositePermissionListener;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -27,11 +38,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView tLastnameProfile;
     private TextView tEmailProfile;
     private TextView tUsernameProfile;
+    private ImageView iPhotoProfile;
     private ImageView iNameProfile;
     private ImageView iLastnameProfile;
     private ImageView iEmailProfile;
     private ImageView iUsernameProfile;
     private Button bChangePasswordProfile;
+
+    private MultiplePermissionsListener permissionListener;
 
     private UserResponse user;
     private UserViewModel userViewModel;
@@ -60,6 +74,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tLastnameProfile = view.findViewById(R.id.tLastnameProfile);
         tEmailProfile = view.findViewById(R.id.tEmailProfile);
         tUsernameProfile = view.findViewById(R.id.tUsernameProfile);
+        iPhotoProfile = view.findViewById(R.id.iPhotoProfile);
         iNameProfile = view.findViewById(R.id.iNameProfile);
         iLastnameProfile = view.findViewById(R.id.iLastnameProfile);
         iEmailProfile = view.findViewById(R.id.iEmailProfile);
@@ -71,10 +86,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         iLastnameProfile.setOnClickListener(this::onClick);
         iEmailProfile.setOnClickListener(this::onClick);
         iUsernameProfile.setOnClickListener(this::onClick);
+        iPhotoProfile.setOnClickListener(this::onClick);
 
         /* cargo los datos del usuario */
-        fetchUProfile();
+        fetchProfile();
 
+        /* cargo la foto de perfil del usuario */
+        fetchPhotoProfile();
         return view;
     }
 
@@ -97,17 +115,54 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.iEmailProfile:
                 fragment = BottomModalEditProfile.newInstance(BottomModalEditProfile.FIELD_EMAIL);
                 break;
+            case R.id.iPhotoProfile:
+                Log.d(TAG, "uplading photo");
+                checkPermission();
+                break;
             default: /* click a un componente distinto, no debe ocurrir nada */
                 return;
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             fragment.setUserResponse(user);
             fragment.show(getActivity().getSupportFragmentManager(), TAG);
         }
     }
 
-    private void fetchUProfile() {
+    private void fetchPhotoProfile() {
+
+        //cargo la foto al entrar en el fragmento
+        String photoUrlLocal = SharedPreferencesManager.getString(Constant.PREF_PHOTO);
+        if(photoUrlLocal != null && !photoUrlLocal.equals("")) {
+            Glide.with(MyApplication.getContext())
+                    .load(Constant.API_URL + photoUrlLocal)
+                    .error(R.drawable.ic_baseline_account_circle_24)
+                    .dontAnimate()
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(iPhotoProfile);
+        }
+
+        //refresco el imageView cada vez que se cambie la foto
+        userViewModel.fetchPhotoProfile().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String url) {
+                if(url != null && !url.equals("")) {
+                    Glide.with(MyApplication.getContext())
+                            .load(Constant.API_URL + user.getPhotoUrl())
+                            .error(R.drawable.ic_baseline_account_circle_24)
+                            .dontAnimate()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(iPhotoProfile);
+                }
+            }
+        });
+    }
+
+    private void fetchProfile() {
         userViewModel.fetchProfile().observe(getActivity(), new Observer<UserResponse>() {
             @Override
             public void onChanged(UserResponse userResponse) {
@@ -120,5 +175,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "perfil de usuario: " + user);
             }
         });
+    }
+
+    public void checkPermission() {
+        MultiplePermissionsListener permissionsListener =
+                DialogOnAnyDeniedMultiplePermissionsListener.Builder
+                    .withContext(getActivity())
+                    .withTitle("Permisos")
+                    .withMessage("Los permisos solicitados son necesarios para cargar tu foto de perfil")
+                    .build();
+
+        this.permissionListener = new CompositeMultiplePermissionsListener((MultiplePermissionsListener)  getActivity(), permissionsListener);
+
+        Dexter.withContext(getActivity())
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(this.permissionListener)
+                .check();
     }
 }
