@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText txtPasswordLogin;
     MiniTwitterClient miniTwitterClient;
     MiniTwitterService miniTwitterService;
+
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +106,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()) {
+                    Log.d(TAG, "usuario: " + response.body());
                     SharedPreferencesManager.setString(Constant.PREF_TOKEN, response.body().getJwt());
                     SharedPreferencesManager.setString(Constant.PREF_USERNAME, response.body().getUserName());
                     SharedPreferencesManager.setString(Constant.PREF_EMAIL, response.body().getEmail());
+                    SharedPreferencesManager.setString(Constant.PREF_PHOTO, response.body().getPhotoUrl());
                     Toast.makeText(LoginActivity.this, "Inicio sesion exitoso" , Toast.LENGTH_SHORT).show();
                     openDashboard();
                 } else {

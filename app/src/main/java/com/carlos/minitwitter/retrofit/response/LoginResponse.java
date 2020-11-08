@@ -21,6 +21,10 @@ public class LoginResponse {
     @SerializedName("message")
     private String message;
 
+    @Expose
+    @SerializedName("photo_url")
+    private String photoUrl;
+
     public LoginResponse() {
     }
 
@@ -54,5 +58,24 @@ public class LoginResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResponse{" +
+                "userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", jwt='" + jwt + '\'' +
+                ", message='" + message + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                '}';
     }
 }
