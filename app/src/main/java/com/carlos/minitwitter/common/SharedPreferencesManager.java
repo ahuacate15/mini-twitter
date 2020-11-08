@@ -22,4 +22,10 @@ public class SharedPreferencesManager {
     public static String getString(String key) {
         return getSharedPreferences().getString(key, null);
     }
+
+    public static void clearData() {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.clear();
+        editor.commit();
+    }
 }

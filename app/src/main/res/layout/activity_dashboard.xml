@@ -46,6 +46,19 @@
                         app:layout_constraintBottom_toBottomOf="@+id/iToolbarPhoto"
                         app:layout_constraintStart_toEndOf="@+id/iToolbarPhoto"
                         app:layout_constraintTop_toTopOf="@+id/iToolbarPhoto" />
+
+                    <Button
+                        android:id="@+id/bCerrarSesion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:text="salir"
+                        android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintBottom_toBottomOf="@+id/tToolbarUserName"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tToolbarUserName" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.appcompat.widget.Toolbar>

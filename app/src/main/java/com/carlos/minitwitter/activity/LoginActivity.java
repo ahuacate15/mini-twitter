@@ -44,10 +44,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
-        initRetrofit();
-        findViewToElements();
-        setActions();
+        String userName = SharedPreferencesManager.getString(Constant.PREF_USERNAME);
+
+        /* sesion iniciado, inicia el dashboard */
+        if(userName == null) {
+            initRetrofit();
+            findViewToElements();
+            setActions();
+        } else {
+            openDashboard();
+        }
     }
+
 
     public void initRetrofit() {
         miniTwitterClient = new MiniTwitterClient();
@@ -99,9 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferencesManager.setString(Constant.PREF_USERNAME, response.body().getUserName());
                     SharedPreferencesManager.setString(Constant.PREF_EMAIL, response.body().getEmail());
                     Toast.makeText(LoginActivity.this, "Inicio sesion exitoso" , Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    startActivity(intent);
-                    finish();
+                    openDashboard();
                 } else {
                     try {
                         ErrorResponse error = ConvertToGson.toError(response.errorBody().string());
@@ -122,5 +128,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void openSingUp() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private void openDashboard() {
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

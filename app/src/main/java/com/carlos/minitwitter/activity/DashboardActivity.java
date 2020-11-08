@@ -1,6 +1,7 @@
 package com.carlos.minitwitter.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carlos.minitwitter.R;
 import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.MyApplication;
+import com.carlos.minitwitter.common.SharedPreferencesManager;
 import com.carlos.minitwitter.data.UserViewModel;
 import com.carlos.minitwitter.fragment.BottomModalTweetFragment;
 import com.carlos.minitwitter.fragment.TweetFragment;
@@ -53,6 +56,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private FloatingActionButton bNewTweet;
     private BottomNavigationView bottomNavigationView;
+    private Button bCerrarSesion;
     private AppBarLayout appBarLayout;
     private TextView tToolbarUserName;
     private ImageView iToolbarPhoto;
@@ -68,12 +72,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bCerrarSesion = findViewById(R.id.bCerrarSesion);
         bNewTweet = findViewById(R.id.bNewTweet);
         tToolbarUserName = findViewById(R.id.tToolbarUserName);
         iToolbarPhoto = findViewById(R.id.iToolbarPhoto);
         appBarLayout = findViewById(R.id.appBarLayout);
 
-        bNewTweet.setOnClickListener(this);
+        bNewTweet.setOnClickListener(this::onClick);
+        bCerrarSesion.setOnClickListener(this::onClick);
 
         getSupportActionBar().hide();
 
@@ -92,14 +98,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.bNewTweet) {
-            openNewTweetFragment();
+        switch (view.getId()) {
+            case R.id.bNewTweet:
+                openNewTweetFragment();
+                break;
+            case R.id.bCerrarSesion:
+                closeSession();
+                break;
         }
+
     }
 
     private void openNewTweetFragment() {
         NewTweetFragment dialog = new NewTweetFragment();
         dialog.show(getSupportFragmentManager(), "NewTweetFragment");
+    }
+
+    private void closeSession() {
+        SharedPreferencesManager.clearData();
+        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void fetchProfile() {
