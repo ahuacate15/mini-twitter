@@ -2,13 +2,16 @@ package com.carlos.minitwitter.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,6 +66,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private TextView tToolbarUserName;
     private ImageView iToolbarPhoto;
     private UserViewModel userViewModel;
+    private View fDashboard;
+
+    private int statusBarHeight = 0;
 
     private static String TAG = "DashboardActivity";
 
@@ -77,6 +85,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         tToolbarUserName = findViewById(R.id.tToolbarUserName);
         iToolbarPhoto = findViewById(R.id.iToolbarPhoto);
         appBarLayout = findViewById(R.id.appBarLayout);
+        fDashboard = findViewById(R.id.fDashboard);
 
         bNewTweet.setOnClickListener(this::onClick);
         bCerrarSesion.setOnClickListener(this::onClick);
@@ -95,6 +104,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         fetchProfile();
         fetchPhotoProfile();
     }
+
 
     @Override
     public void onClick(View view) {
@@ -164,18 +174,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
 
-        appBarLayout.setVisibility(View.VISIBLE);
 
         switch (destination.getId()) {
+
             case R.id.navigation_home:
+                appBarLayout.setVisibility(View.VISIBLE);
                 bNewTweet.show();
                 break;
             case R.id.navigation_tweet_fav:
+                appBarLayout.setVisibility(View.VISIBLE);
                 bNewTweet.hide();
                 break;
             case R.id.navigation_profile:
+                appBarLayout.setVisibility(View.GONE);
                 bNewTweet.hide();
-                appBarLayout.setVisibility(View.INVISIBLE);
                 break;
         }
     }
