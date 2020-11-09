@@ -178,15 +178,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         switch (destination.getId()) {
 
             case R.id.navigation_home:
-                appBarLayout.setVisibility(View.VISIBLE);
+                //appBarLayout.setVisibility(View.VISIBLE);
                 bNewTweet.show();
                 break;
             case R.id.navigation_tweet_fav:
-                appBarLayout.setVisibility(View.VISIBLE);
+                //appBarLayout.setVisibility(View.VISIBLE);
                 bNewTweet.hide();
                 break;
             case R.id.navigation_profile:
-                appBarLayout.setVisibility(View.GONE);
+                //appBarLayout.setVisibility(View.GONE);
                 bNewTweet.hide();
                 break;
         }
