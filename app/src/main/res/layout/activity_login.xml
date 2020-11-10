@@ -10,44 +10,68 @@
         android:layout_width="250dp"
         android:layout_height="80dp"
         android:src="@drawable/ic_logo_minitwitter_blue"
-        app:layout_constraintBottom_toTopOf="@+id/txtEmailLogin"
+        app:layout_constraintBottom_toTopOf="@+id/txtEmailLoginLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <EditText
-        android:id="@+id/txtEmailLogin"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtEmailLoginLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="Correo"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/txtPasswordLogin"
+        app:layout_constraintBottom_toTopOf="@+id/etPasswordLayout"
         app:layout_constraintEnd_toEndOf="@+id/imgLogin"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/imgLogin"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/imgLogin"
+        app:hintEnabled="false">
 
-    <EditText
-        android:id="@+id/txtPasswordLogin"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtEmailLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Usuario o correo"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHighlight="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimary"
+            android:textColorLink="@color/colorPrimaryDark"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etPasswordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
-        app:layout_constraintEnd_toEndOf="@+id/txtEmailLogin"
+        app:layout_constraintEnd_toEndOf="@+id/txtEmailLoginLayout"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/txtEmailLogin"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmailLogin" />
+        app:layout_constraintStart_toStartOf="@+id/txtEmailLoginLayout"
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailLoginLayout"
+        app:hintEnabled="false"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtPasswordLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contrasena"
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHighlight="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimary"
+            android:textColorLink="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="@+id/txtEmailLogin"
+            app:layout_constraintStart_toStartOf="@+id/txtEmailLogin"
+            app:layout_constraintTop_toBottomOf="@+id/txtEmailLogin" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnLogin"
@@ -58,10 +82,10 @@
         android:text="entrar"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/btnOpenSingUp"
-        app:layout_constraintEnd_toEndOf="@+id/txtPasswordLogin"
+        app:layout_constraintEnd_toEndOf="@+id/etPasswordLayout"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/txtPasswordLogin"
-        app:layout_constraintTop_toBottomOf="@+id/txtPasswordLogin" />
+        app:layout_constraintStart_toStartOf="@+id/etPasswordLayout"
+        app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout" />
 
     <Button
         android:id="@+id/btnOpenSingUp"
