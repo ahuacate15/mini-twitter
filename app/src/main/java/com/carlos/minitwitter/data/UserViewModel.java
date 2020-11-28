@@ -3,6 +3,7 @@ package com.carlos.minitwitter.data;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.carlos.minitwitter.retrofit.response.GenericResponse;
 import com.carlos.minitwitter.retrofit.response.UserResponse;
 
 public class UserViewModel extends ViewModel {
@@ -11,6 +12,7 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<UserResponse> userProfile;
     private MutableLiveData<String> errorMessageToUpdate;
     private MutableLiveData<String> photoProfile;
+    private MutableLiveData<GenericResponse> changePassword;
 
     public UserViewModel() {
         userRepository = new UserRepository();
@@ -34,5 +36,10 @@ public class UserViewModel extends ViewModel {
     public MutableLiveData<String> fetchPhotoProfile() {
         photoProfile = userRepository.getPhotoProfile();
         return photoProfile;
+    }
+
+    public MutableLiveData<GenericResponse> changePassword(String  originalPassword, String newPassword) {
+        changePassword = userRepository.changePassword(originalPassword, newPassword);
+        return changePassword;
     }
 }

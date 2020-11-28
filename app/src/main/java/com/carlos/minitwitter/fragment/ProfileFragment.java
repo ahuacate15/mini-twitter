@@ -87,6 +87,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         iEmailProfile.setOnClickListener(this::onClick);
         iUsernameProfile.setOnClickListener(this::onClick);
         iPhotoProfile.setOnClickListener(this::onClick);
+        bChangePasswordProfile.setOnClickListener(this::onClick);
 
         /* cargo los datos del usuario */
         fetchProfile();
@@ -101,8 +102,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         BottomModalEditProfile fragment = null;
 
+
         /* utilizo el mismo fragmento para dintintos campos del perfil de usuario */
         switch (view.getId()) {
+
+            /**
+             * cuando se cambia el password se utiliza un modal diferente, por eso se incluye
+             * el return para este case*/
+            case R.id.bChangePasswordProfile:
+                BottomModalChangePassword fragmentChangePass = BottomModalChangePassword.newInstance();
+                fragmentChangePass.show(getActivity().getSupportFragmentManager(), TAG);
+                return;
             case R.id.iNameProfile:
                 fragment = BottomModalEditProfile.newInstance(BottomModalEditProfile.FIELD_NAME);
                 break;

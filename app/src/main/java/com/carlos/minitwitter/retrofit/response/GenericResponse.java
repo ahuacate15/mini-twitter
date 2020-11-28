@@ -9,6 +9,10 @@ public class GenericResponse {
     @SerializedName("message")
     private String message;
 
+    @Expose
+    @SerializedName("code")
+    private int code;
+
     public GenericResponse() {}
 
     public String getMessage() {
@@ -17,5 +21,13 @@ public class GenericResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

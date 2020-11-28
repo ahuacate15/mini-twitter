@@ -9,6 +9,8 @@ import com.carlos.minitwitter.common.Constant;
 import com.carlos.minitwitter.common.ConvertToGson;
 import com.carlos.minitwitter.common.MyApplication;
 import com.carlos.minitwitter.common.SharedPreferencesManager;
+import com.carlos.minitwitter.retrofit.MiniTwitterClient;
+import com.carlos.minitwitter.retrofit.MiniTwitterService;
 import com.carlos.minitwitter.retrofit.UserClient;
 import com.carlos.minitwitter.retrofit.UserService;
 import com.carlos.minitwitter.retrofit.response.ErrorResponse;
@@ -28,14 +30,20 @@ public class UserRepository {
 
     private UserService userService;
     private UserClient userClient;
+    private MiniTwitterService miniTwitterService;
+    private MiniTwitterClient miniTwitterClient;
     private MutableLiveData<UserResponse> userProfile;
     private MutableLiveData<String> photoProfile;
+    private MutableLiveData<GenericResponse> changePassword;
 
     private static final String TAG = "UserRepository";
 
     public UserRepository() {
         this.userClient = UserClient.getInstance();
         this.userService = this.userClient.getUserService();
+
+        this.miniTwitterClient = MiniTwitterClient.getInstance();
+        this.miniTwitterService = this.miniTwitterClient.getMiniTwitterService();
     }
 
     public MutableLiveData<UserResponse> fetchProfile() {
@@ -142,6 +150,32 @@ public class UserRepository {
         });
 
         return photoProfile;
+    }
+
+    public MutableLiveData<GenericResponse> changePassword(String originalPassword, String newPassword) {
+        Call<GenericResponse> call = miniTwitterService.changePassword(originalPassword, newPassword);
+        call.enqueue(new Callback<GenericResponse>() {
+            @Override
+            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                if(response.isSuccessful()) {
+                    changePassword.setValue(response.body());
+                } else {
+                    try {
+                        GenericResponse error = ConvertToGson.toGenericResponse(response.errorBody().string());
+                        changePassword.setValue(error);
+                    } catch(IOException e) {
+                        Log.e(TAG, "error to parse changePassword: " + e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericResponse> call, Throwable t) {
+                Toast.makeText(MyApplication.getContext(), "Problemas con el internet, intenta de nuevo.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return changePassword;
     }
 
     public MutableLiveData<String> getPhotoProfile() {
