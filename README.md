@@ -1,6 +1,6 @@
 <img src=".github/logo_mini_twitter.jpeg" height="110" />
 
-# Mini twitter
+## Acerca del proyecto
 Proyecto basado en el curso de android del maestro **@miguelcamposdev**, desarrollado en JAVA para fines didacticos.
 
 ## Caracteristicas
