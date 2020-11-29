@@ -24,9 +24,9 @@ Proyecto basado en el curso de android del maestro **@miguelcamposdev**, desarro
 * Pruebas unitarias
 
 ## Instalación
-Necesitas un servidor apache y un servidor mysql para correr la [API mini-twitter](https://github.com/ahuacate15/sd-api), baja el código fuente y sigue las instrucciones de instalación del mismo:
+Necesitas un servidor apache y un servidor mysql para correr la [API mini-twitter](https://github.com/ahuacate15/api-mini-twitter), baja el código fuente y sigue las instrucciones de instalación del mismo:
 ```
-git clone https://github.com/ahuacate15/sd-api.git
+git clone https://github.com/ahuacate15/api-mini-twitter.git
 ```
 
 Cuando la API se encuentre corriendo en tu equipo, agrega la **IP privada** de tu PC en el archivo ``com.carlos.minitwitter.common.Constant.java`` para que puedas probar la aplicación en tu red local.
