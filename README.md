@@ -1,5 +1,4 @@
 <img src=".github/logo_mini_twitter.jpeg" height="110" />
-![alt text](.github/logo_mini_twitter.jpeg)
 
 # Mini twitter
 Proyecto basado en el curso de android del maestro **@miguelcamposdev**, desarrollado en JAVA para fines didacticos.
